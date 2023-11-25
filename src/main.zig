@@ -1,4 +1,5 @@
 const std = @import("std");
+const network = @import("network");
 const c = @cImport({
     @cDefine("CNFG_IMPLEMENTATION", {});
     @cInclude("rawdraw_sf.h");
