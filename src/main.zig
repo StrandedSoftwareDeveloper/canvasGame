@@ -40,6 +40,22 @@ export fn HandleMotion(x: c_int, y: c_int, mask: c_int) void {
 }
 export fn HandleDestroy() void {}
 
+fn drawSquare(canvas: []u32, width: u16, height: u16, x: i32, y: i32, radius: u16, color: u32) void {
+    var yIndex: i32 = y - radius;
+    while (yIndex < y + radius) : (yIndex += 1) {
+        if (yIndex < 0 or yIndex >= height) {
+            continue;
+        }
+        var xIndex: i32 = x - radius;
+        while (xIndex < x + radius) : (xIndex += 1) {
+            if (xIndex < 0 or xIndex >= width) {
+                continue;
+            }
+            canvas[@as(usize, @intCast(yIndex * width + xIndex))] = color;
+        }
+    }
+}
+
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const allocator = gpa.allocator();
@@ -65,7 +81,8 @@ pub fn main() !void {
         c.CNFGClearFrame();
 
         if (draw) {
-            canvas[@as(usize, @intCast(mouseY * 800 + mouseX))] = 0x00_00_FF_FF;
+            //canvas[@as(usize, @intCast(mouseY * 800 + mouseX))] = 0x00_00_FF_FF;
+            drawSquare(&canvas, 800, 600, mouseX, mouseY, 20, 0x00_00_00_FF);
         }
         _ = c.CNFGBlitImage(&canvas, 0, 0, 800, 600);
         _ = c.CNFGColor(0xFF_00_00_FF);
